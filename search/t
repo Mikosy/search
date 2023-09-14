@@ -1,0 +1,33 @@
+   <script>
+            document.addEventListener("DOMContentLoaded", function(){
+                const loadMoreButton = document.getElementById("load-more");
+                const movieList = document.getElementById("movie-list");
+                let currentPage = 2;
+
+                loadMoreButton.addEventListener("click", function(){
+                    fetch(`/load-more-movies/?page=${currentPage}`,{
+                        method: "GET",
+                    })
+                    .then(function (response){
+                        return response.json();
+                    })
+                    .then(function (data){
+                        data.movies.forEach(function (movie){
+                            const listItem = document.createElement("li");
+                            listItem.textContent = movie.title;
+                            movieList.appendChild(listItem);
+                        });
+
+                        currentPage++;
+                        if (!data.has_more){
+                            loadMoreButton.style.display="none";
+                        }
+                    })
+
+                    .catch(function(error){
+                        console.log("Error fetching more movies", error);
+                    });
+                });
+            });
+
+        </script>
